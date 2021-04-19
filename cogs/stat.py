@@ -28,23 +28,25 @@ class Stat(commands.Cog, name="stat"):
         """
         items = await self.get_guild(arg)
         if not items:
-            embed = discord.Embed(description=f'Please use first register guild_name!')
+            embed = discord.Embed(description=f'Please use first register guild!')
             await ctx.send(embed=embed)
             self.guild.reset_cooldown(ctx)
             return 0
 
         embed = discord.Embed(title='Collecting data...')
+        embed.set_footer(text='If this process takes a long time, it means that your guild has insufficient data ')
         message = await ctx.send(embed=embed)
 
         embeds = []
 
         embed = await self.embed_overall(arg)
         embed1 = await self.embed_skills_top3(arg)
-        embed2 = await self.embed_slayers_top3(arg)
-        embed3 = await self.embed_dungeons_fastest_time_top3(arg)
+        embed2 = await self.embed_dungeons_top3(arg)
+        embed3 = await self.embed_slayers_top3(arg)
+        embed4 = await self.embed_dungeons_fastest_time_top3(arg)
         
 
-        embeds = [embed,embed1,embed2,embed3]
+        embeds = [embed,embed1,embed2,embed3,embed4]
         await message.edit(embed=embed) #stop "collecting data"
 
         #declaring slider
@@ -63,7 +65,7 @@ class Stat(commands.Cog, name="stat"):
             return user == ctx.author and str(reaction) in emojis
 
         embed_index = 0 
-        max_index = 3
+        max_index = 4
 
 
         while True:
@@ -86,7 +88,7 @@ class Stat(commands.Cog, name="stat"):
         today = datetime.now(tz).strftime('%Y-%m-%d')
         yesterday = (datetime.now(tz) - timedelta(days=1)).strftime('%Y-%m-%d')
 
-        embed = discord.Embed(title='⚔️'+items['name'], colour=discord.Colour(0x3e038c),
+        embed = discord.Embed(title=items['name']+'🎭', colour=discord.Colour(0x3e038c),
             description='**Gxp today:** '+str(items['daily_xp'][today]) + '\n\u200b' +
                             '**Gxp yesterday:** '+str(items['daily_xp'][yesterday]))
 
@@ -99,6 +101,9 @@ class Stat(commands.Cog, name="stat"):
 
         embed.add_field(name=f"Catagombs avg 💀", value=cata_avg, inline=True )
 
+        #keycaps = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
+
+
         top10 = await self.get_top10(arg)
         top10_name = top10['name'].tolist()
         top10_name = '\n\u200b'.join(top10_name)
@@ -108,8 +113,8 @@ class Stat(commands.Cog, name="stat"):
         top10_gxp = '\n\u200b'.join(top10_gxp)
 
         embed.add_field(name=f"no", value=index, inline=True )
-        embed.add_field(name=f"player", value=top10_name, inline=True )
-        embed.add_field(name=f"gxp", value=top10_gxp, inline=True )
+        embed.add_field(name=f"Player", value=top10_name, inline=True )
+        embed.add_field(name=f"Gxp", value=top10_gxp, inline=True )
 
         return embed
 
@@ -117,7 +122,7 @@ class Stat(commands.Cog, name="stat"):
         max_avg = await self.get_max_skill_avg(arg)
 
 
-        embed = discord.Embed(title='Best players', colour=discord.Colour(0x3e038c))
+        embed = discord.Embed(title='Best players',description=f'Guild: {arg}', colour=discord.Colour(0x3e038c))
         embed.add_field(name=f"\u200b", value='\u200b', inline=True )
         embed.add_field(name=f"Skill average 👑", value=self.styledf(max_avg), inline=True )
         embed.add_field(name=f"\u200b", value='\u200b', inline=True )
@@ -142,7 +147,7 @@ class Stat(commands.Cog, name="stat"):
 
     async def embed_slayers_top3(self,arg):
 
-        embed = discord.Embed(title='Slayers',colour=discord.Colour(0x3e038c))
+        embed = discord.Embed(title='Slayers',description=f'Guild: {arg}',colour=discord.Colour(0x3e038c))
         data_max_slayer = await self.get_max_slayer(arg)
 
         embed.add_field(name='Zombie 🧟', value =self.styledf(data_max_slayer[0]), inline=False)
@@ -162,16 +167,32 @@ class Stat(commands.Cog, name="stat"):
         embed.add_field(name=f'Floor {7}', value =self.styledf(fastest_times[7]), inline=True)
         return embed
 
+    async def embed_dungeons_top3(self,arg):
+
+        embed = discord.Embed(title= f"Dungeons top3:", description=f'Guild: {arg}',colour=discord.Colour(0x3e038c))
+        #embed.set_footer(text=f'{arg}')
+        data_max_dungeons = await self.get_max_dungeons(arg)
+        
+
+        embed.add_field(name='Cata lvl 🦴', value =self.styledf(data_max_dungeons[0]), inline=True)
+        embed.add_field(name='Healer 💓', value =self.styledf(data_max_dungeons[1]), inline=True)
+        embed.add_field(name='Mage 🪄', value =self.styledf(data_max_dungeons[2]), inline=True)
+        embed.add_field(name='Berserk 🗡️', value =self.styledf(data_max_dungeons[3]), inline=True)
+        embed.add_field(name='Archer 🏹', value =self.styledf(data_max_dungeons[4]), inline=True)
+        embed.add_field(name='Tank 🛡️', value =self.styledf(data_max_dungeons[5]), inline=True)
+        return embed
+
+
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="skills")
     async def skills(self, ctx, arg):
         """
-        Show your guild skills top3 leaderboard
+        Top3 skills leaderboard
         """
         items = await self.get_guild(arg)
         if not items:
             items = await self.get_guild(arg)
-            embed = discord.Embed(description=f'Please use first register guild_name!')
+            embed = discord.Embed(description=f'Please use first register guild!')
             await ctx.send(embed=embed)
             self.guild.reset_cooldown(ctx)
             return 0
@@ -182,11 +203,11 @@ class Stat(commands.Cog, name="stat"):
     @commands.command(name="slayers")
     async def slayers(self, ctx, arg):
         """
-        Show your guild slayers top3 leaderboard
+        Top3 slayers leaderboard
         """
         items = await self.get_guild(arg)
         if not items:
-            embed = discord.Embed(description=f'Please use first register guild_name!')
+            embed = discord.Embed(description=f'Please use first register guild!')
             await ctx.send(embed=embed)
             self.guild.reset_cooldown(ctx)
             return 0
@@ -197,11 +218,11 @@ class Stat(commands.Cog, name="stat"):
     @commands.command(name="dtime")
     async def dtime(self, ctx, arg):
         """
-        Show your guild top3 best dungeons runs!
+        Fastest dungeons runs!
         """
         items = await self.get_guild(arg)
         if not items:
-            embed = discord.Embed(description=f'Please use first register guild_name!')
+            embed = discord.Embed(description=f'Please use first register guild!')
             await ctx.send(embed=embed)
             self.dtime.reset_cooldown(ctx)
             return 0
@@ -215,13 +236,27 @@ class Stat(commands.Cog, name="stat"):
         Show your guild gxp leaderboard
         """
         if not items:
-            embed = discord.Embed(description=f'Please use first register guild_name!')
+            embed = discord.Embed(description=f'Please use first register command!')
             await ctx.send(embed=embed)
             self.leaderboard.reset_cooldown(ctx)
             return 0
         embed1 = await self.embed_overall(arg)
         await ctx.send(embed=embed)
 
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="dungeons")
+    async def dungeons(self, ctx, arg):
+        """
+        Top3 cata/class level
+        """
+        items = await self.get_guild(arg)
+        if not items:
+            embed = discord.Embed(description=f'Please use first register guild!')
+            await ctx.send(embed=embed)
+            self.guild.reset_cooldown(ctx)
+            return 0
+        embed = await self.embed_dungeons_top3(arg)
+        await ctx.send(embed=embed)
 
     # @commands.command(name="top")
     # async def top(self, ctx, *args):
@@ -270,7 +305,7 @@ class Stat(commands.Cog, name="stat"):
                 raw_row = (player['name'],player['gxp'][today])
             except Exception as e:
                 raw_row = (player['name'],0)
-                print(e)
+                logging.warning(f'{e} get_top10')
             df.append(raw_row)
         df = pd.DataFrame(df)
         df.columns = ['name','gxp']
@@ -322,6 +357,8 @@ class Stat(commands.Cog, name="stat"):
         await asyncio.sleep(0)
         #print(top3avg)
         return top3avg
+
+
 
 
     #that's a long name ngl
@@ -389,29 +426,47 @@ class Stat(commands.Cog, name="stat"):
         await asyncio.sleep(0)
         return data_max_slayer
 
+
+
+
+    async def get_max_dungeons(self,name):
+        columns_dungeons = ['experience_cata','healer','mage','berserk','archer','tank']
+
+        df = await self.get_cata_df(name)
+        data_max_dungeons = []
+        for i in columns_dungeons:
+            tmp_df = df[['name',i]]
+            tmp_df = tmp_df.nlargest(3, [i])
+            tmp_df[i] = tmp_df[i].round(decimals=0).apply(self.calculate_cata)
+            data_max_dungeons.append(tmp_df)
+        await asyncio.sleep(0)
+        print(data_max_dungeons[0])
+        return data_max_dungeons
+
     async def get_cata_df(self, name):
         items = await self.get_guild(name)
         df = []
+        columns_dungeons = ['experience_cata','healer','mage','berserk','archer','tank']
         for i in items['members']:
             player = Database.find_one('members', {'_id': i})
             try:
-                raw_row = [player['name']] + [self.calculate_cata(player['dungeons']['experience_cata'])]
+                raw_row = [player['name']] + [player['dungeons'][j] for j in columns_dungeons] + [self.calculate_cata(player['dungeons']['experience_cata'])] 
             except Exception as e:
                 raise e
             df.append(raw_row)
         df = pd.DataFrame(df)
-        df.columns = ['name', 'cata_lvl']
+        df.columns = ['name'] + columns_dungeons + ['lvl_cata']
         await asyncio.sleep(0)
         df = df.dropna()
         if df.empty:
             raise commands.BadArgument
-
         return df
 
-    # get 
+
 
     async def get_cata_avg(self,name):
         df = await self.get_cata_df(name)
+        df = df[['name','lvl_cata']]
         df['mean'] = df.mean(axis=1)
         mean = df['mean'].mean()
         await asyncio.sleep(0)
