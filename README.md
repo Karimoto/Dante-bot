@@ -3,6 +3,9 @@
 ## About
 This bot was created to increase the satisfaction of playing Skyblock on [Hypixel Network](https://hypixel.net/), now you can easily compare your stats with your guild mates and possibly make fun of them (or the other way around). For guild leaders it is a great tool to monitor the progress or activity of players, a deeper analysis (soon) will allow you to manage the guild more effectively (probably, just don't be too harsh on them please).
 
+## Before you start
+Bot is still under heavy development, therefore it is not free from bugs (like any software). Please consider reporting every error you encounter. Thank u very much! 
+
 ## Discord invite
 Soon
 
