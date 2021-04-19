@@ -1,0 +1,6 @@
+__pycache__/
+bot-env/
+.vscode/
+logs/log
+cogs/template.py
+settings.py
