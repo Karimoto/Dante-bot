@@ -38,12 +38,16 @@ class Clan(commands.Cog, name="clan"):
         """
         Use this command to register your guild!
         """
+
         arg = str.lower(arg)
         if Database.find_one('guild', {'name': arg}):
             embed = discord.Embed(title=f'Failed!',description=f'{arg} exist in database, please use {settings.BOT_PREFIX}guild {arg} instead.')
             self.register.reset_cooldown(context)
             await context.send(embed=embed)
             return 0
+
+        embed = discord.Embed(title=f'Fetching data, please wait!')
+        message = await context.send(embed=embed)
 
         headers = {'API-Key': settings.API_AUTH}
         params = {'name': arg}
@@ -58,7 +62,7 @@ class Clan(commands.Cog, name="clan"):
             if len(members) < 3:
                 embed = discord.Embed(
                     description=f'U need at least 3 members to register guild!')
-                await context.send(embed=embed)
+                await message.edit(embed=embed)
                 return 0
             
             g_exp = parse_gexp(response['guild']['members'])
@@ -74,8 +78,13 @@ class Clan(commands.Cog, name="clan"):
             gxp_yesterday = sum(gxp_yesterday)
             record = {'_id': gid, 'name': name, 'members': members, 'daily_xp': {today: gxp_today, yesterday: gxp_yesterday}}
 
-            fetched = await self.update_skyblock(members, gid, g_exp)
-
+            try:
+                fetched = await self.update_skyblock(members, gid, g_exp)
+            except Exception as e:
+                logging.error(f'{e} update_skyblock failed')
+                embed = discord.Embed(title=f"Failed! Try again in few minutes.")
+                message.edit(emded=embed)
+                return 0 
             for i in fetched:
                 filter = {'_id': i['_id']}
                 new = {"$set": i}
@@ -89,7 +98,7 @@ class Clan(commands.Cog, name="clan"):
             embed = discord.Embed(title=f"Failed!",description=f"{arg} not found")
 
 
-        await context.send(embed=embed)
+        await message.edit(embed=embed)
 
     # don't run before bot_ready()
     def g_queue_start(self):
@@ -200,12 +209,14 @@ class Clan(commands.Cog, name="clan"):
         await self.compare(current)
 
         if(self.today_local != datetime.now().strftime('%Y-%m-%d')):
-            print('updating!')
+            logging.info(f"Udpading!")
+            print('Updating!')
             print(self.today_local,datetime.now().strftime('%Y-%m-%d'))
             await self.daily_update()
             self.today_local = datetime.now().strftime('%Y-%m-%d')
+            logging.info(f"Udpate is done")
             print(f"Update is done!")
-
+        logging.info(f"Refreshed {current} succefully!")
         print(f"Refreshed {current} succefully!")
 
     @refresh.before_loop
@@ -215,11 +226,16 @@ class Clan(commands.Cog, name="clan"):
 
     async def daily_update(self):
         sb_queue = self.g_queue_start()
+        
         for current in sb_queue:
             #current = sb_queue.pop(0)
             print(f'Updating {current}...')
             g = Database.find_one('guild',{'_id': current})
-            await self.update_players(g['members'],current)
+            try:
+                await self.update_players(g['members'],current)
+            except Exception:
+                print(f'Faled to update {current}')
+                logging.error(f'[Update Error] {e}')
             print(f'{current}: updated!')
             await asyncio.sleep(120)
 
@@ -330,7 +346,6 @@ async def fetch_player_data(response, uuid, name, gid, gxp):
     row.update({'name': name})
     row.update({'name_lower': str.lower(name)})
     row.update({'gid': gid})
-
     row.update({'skills': {}})
     row.update({'slayers': {}})
     row.update({'dungeons': {}})
