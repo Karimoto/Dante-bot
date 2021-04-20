@@ -241,7 +241,7 @@ class Stat(commands.Cog, name="stat"):
             await ctx.send(embed=embed)
             self.leaderboard.reset_cooldown(ctx)
             return 0
-        embed1 = await self.embed_overall(arg)
+        embed = await self.embed_overall(arg)
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 30, commands.BucketType.user)
