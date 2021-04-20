@@ -215,7 +215,7 @@ class Stat(commands.Cog, name="stat"):
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="dtime")
+    @commands.command(name="dtime",aliases=['dt'])
     async def dtime(self, ctx, arg):
         """
         Fastest dungeons runs!
