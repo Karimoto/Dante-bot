@@ -7,7 +7,7 @@ This bot was created to increase the satisfaction of playing Skyblock on [Hypixe
 Bot is still under heavy development, therefore it is not free from bugs (like any software). Please consider reporting every error you encounter. Thank u very much! 
 
 ## Discord invite
-Soon
+[LINK](https://discordapp.com/oauth2/authorize?&client_id=828564787578667048&scope=bot&permissions=515136)
 
 ## Features
 
