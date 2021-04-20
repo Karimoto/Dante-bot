@@ -33,7 +33,7 @@ class Clan(commands.Cog, name="clan"):
     #This command is used for signing up new clans (hypixel guilds) to db
 
     @commands.cooldown(1, 120, commands.BucketType.user)
-    @commands.command(name="register")
+    @commands.command(name="register",aliases=['r'])
     async def register(self, context, arg):
         """
         Use this command to register your guild!

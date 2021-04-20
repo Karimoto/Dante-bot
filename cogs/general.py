@@ -51,7 +51,7 @@ class general(commands.Cog, name="general"):
         """
         await context.send("I sent you a private message!")
         await context.author.send(f"Invite me by clicking here: https://discordapp.com/oauth2/authorize?&client_id={settings.APPLICATION_ID}&scope=bot&permissions=515136")
-    @commands.command(name="quote", aliases=["date"])
+    @commands.command(name="quote", aliases=["dante"])
     async def quote(self, context):
         """
         Great leader Dante quotes
@@ -80,6 +80,10 @@ class general(commands.Cog, name="general"):
 
         embed = discord.Embed(description=quotes[choosen_index])
         await context.send(embed=embed)
+
+    @commands.command(aliases=['commandlist', 'commands','?'])
+    async def _help(self, ctx):
+        await ctx.send_help()
 
 def setup(bot):
     bot.add_cog(general(bot))

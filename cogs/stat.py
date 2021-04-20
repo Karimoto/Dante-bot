@@ -21,7 +21,7 @@ class Stat(commands.Cog, name="stat"):
         self.bot = bot
 
     @commands.cooldown(1, 60, commands.BucketType.user)
-    @commands.command(name="guild")
+    @commands.command(name="guild",aliases=['g'])
     async def guild(self, ctx, arg):
         """
         Show your guild insights!
@@ -184,7 +184,7 @@ class Stat(commands.Cog, name="stat"):
 
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="skills")
+    @commands.command(name="skills",aliases=['sk'])
     async def skills(self, ctx, arg):
         """
         Top3 skills leaderboard
@@ -200,7 +200,7 @@ class Stat(commands.Cog, name="stat"):
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="slayers")
+    @commands.command(name="slayers",aliases=['sl'])
     async def slayers(self, ctx, arg):
         """
         Top3 slayers leaderboard
@@ -230,7 +230,7 @@ class Stat(commands.Cog, name="stat"):
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name='leaderboard')
+    @commands.command(name='leaderboard',aliases=['l'])
     async def leaderboard(self, ctx, arg):
         """
         Show your guild gxp leaderboard
@@ -245,7 +245,7 @@ class Stat(commands.Cog, name="stat"):
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="dungeons")
+    @commands.command(name="dungeons",aliases=['d'])
     async def dungeons(self, ctx, arg):
         """
         Top3 cata/class level
