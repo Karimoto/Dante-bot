@@ -51,6 +51,16 @@ class general(commands.Cog, name="general"):
         """
         await context.send("I sent you a private message!")
         await context.author.send(f"Invite me by clicking here: https://discordapp.com/oauth2/authorize?&client_id={settings.APPLICATION_ID}&scope=bot&permissions=515136")
+
+
+    @commands.command(name="github")
+    async def github(self, context):
+        """
+        Github repo link
+        """
+        await context.send("I sent you a private message!")
+        await context.author.send(f"Github link: https://github.com/Karimoto/Dante-bot")
+
     @commands.command(name="quote", aliases=["dante"])
     async def quote(self, context):
         """
