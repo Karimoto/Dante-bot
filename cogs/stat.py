@@ -235,6 +235,7 @@ class Stat(commands.Cog, name="stat"):
         """
         Show your guild gxp leaderboard
         """
+        items = await self.get_guild(arg)
         if not items:
             embed = discord.Embed(description=f'Please use first register command!')
             await ctx.send(embed=embed)
