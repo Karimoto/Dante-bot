@@ -83,7 +83,7 @@ class Clan(commands.Cog, name="clan"):
             except Exception as e:
                 logging.error(f'{e} update_skyblock failed')
                 embed = discord.Embed(title=f"Failed! Try again in few minutes.")
-                message.edit(emded=embed)
+                await message.edit(emded=embed)
                 return 0 
             for i in fetched:
                 filter = {'_id': i['_id']}
