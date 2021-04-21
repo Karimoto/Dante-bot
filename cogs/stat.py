@@ -5,6 +5,7 @@ import asyncio
 from datetime import datetime, timedelta
 from pytz import timezone
 import pandas as pd
+import logging
 
 if not os.path.isfile("settings.py"):
 	sys.exit("'settings.py' not found!")
@@ -141,6 +142,9 @@ class Stat(commands.Cog, name="stat"):
         embed.add_field(name=f"Fishing 🐟", value=self.styledf(max_skills[5]), inline=True )
         embed.add_field(name=f"Foraging 🪓", value=self.styledf(max_skills[6]), inline=True )
         embed.add_field(name=f"Alchemy ⚗️", value=self.styledf(max_skills[4]), inline=True )
+        embed.add_field(name=f"Enchanting 🪄", value=self.styledf(max_skills[3]), inline=True )
+        embed.add_field(name=f"\u200b", value='\u200b', inline=True )
+        embed.add_field(name=f"Taming 🐘", value=self.styledf(max_skills[7]), inline=True )
 
         return embed
 
@@ -507,7 +511,7 @@ class Stat(commands.Cog, name="stat"):
                         17559640, 23159640,  30359640,  39559640,  51559640,  66559640,  85559640,
                         109559640, 139559640, 177559640, 225559640, 285559640, 360559640, 453559640,
                         569809640]
-                        
+
         return(sum([xp>i for i in xp_cumsum]))
 
 
@@ -538,7 +542,8 @@ class Stat(commands.Cog, name="stat"):
     async def get_max_skills(self,name):
         df = await self.get_skill_df_raw(name)
         columns_skills = ['experience_skill_combat', 'experience_skill_mining',
-                        'experience_skill_farming', 'experience_skill_enchanting','experience_skill_alchemy', 'experience_skill_fishing','experience_skill_foraging', 'experience_skill_taming']
+                        'experience_skill_farming', 'experience_skill_enchanting','experience_skill_alchemy', 
+                        'experience_skill_fishing','experience_skill_foraging', 'experience_skill_taming']
         columns_skills60 = ['experience_skill_combat', 'experience_skill_mining',
                         'experience_skill_farming', 'experience_skill_enchanting']
 
