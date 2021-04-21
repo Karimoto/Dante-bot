@@ -510,7 +510,7 @@ class Stat(commands.Cog, name="stat"):
                      2284640, 2364640,  3429640,  4839640,  6739640,  9239640, 12539640,
                      16839640, 22439640,  29639640,  38839640,  50839640,  65839640,  84839640,
                      108839640, 138839640]
-        return(sum([xp>i for i in xp_cumsum]))
+        return(sum([xp>i for i in xp_cumsum])-1)
 
 
     async def get_skill_df_raw(self, name):
