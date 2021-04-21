@@ -45,7 +45,6 @@ class Stat(commands.Cog, name="stat"):
         embed3 = await self.embed_slayers_top3(arg)
         embed4 = await self.embed_dungeons_fastest_time_top3(arg)
         
-
         embeds = [embed,embed1,embed2,embed3,embed4]
         await message.edit(embed=embed) #stop "collecting data"
 
@@ -360,8 +359,6 @@ class Stat(commands.Cog, name="stat"):
         return top3avg
 
 
-
-
     #that's a long name ngl
     async def get_skill_avg_for_every_skill(self,name):
         df = await self.get_skill_df(name)
@@ -426,7 +423,6 @@ class Stat(commands.Cog, name="stat"):
             data_max_slayer.append(tmp_df)
         await asyncio.sleep(0)
         return data_max_slayer
-
 
 
 
@@ -510,7 +506,7 @@ class Stat(commands.Cog, name="stat"):
                      2284640, 2364640,  3429640,  4839640,  6739640,  9239640, 12539640,
                      16839640, 22439640,  29639640,  38839640,  50839640,  65839640,  84839640,
                      108839640, 138839640]
-        return(sum([xp>i for i in xp_cumsum]))
+        return(sum([xp>i for i in xp_cumsum])-1)
 
 
     async def get_skill_df_raw(self, name):

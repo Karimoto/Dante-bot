@@ -44,6 +44,14 @@ class general(commands.Cog, name="general"):
         )
         await context.send(embed=embed)
 
+    @commands.command(name="nothing", aliases=["-"])
+    async def nothing(self, context):
+        """
+        Doing nothing
+        """
+        pass
+
+
     @commands.command(name="invite")
     async def invite(self, context):
         """
